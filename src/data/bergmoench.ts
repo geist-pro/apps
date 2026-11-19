@@ -113,7 +113,7 @@ export const de: Copy = {
   crumbs: ['Apps', 'Bergmönch'],
   kicker: 'Karteikarten · iPhone, iPad, Android · Beta',
   claim: 'Karteikarten für alle, die Vorlesungen zu bewältigen haben.',
-  lede: 'Bergmönch öffnet Anki-Stapel und plant deine Wiederholungen. Du lernst ein paar Minuten am Tag, und Karten, die dir schwerfallen, kommen früher wieder als die, die du kannst. Die App ist kostenlos, quelloffen und braucht kein Konto.',
+  lede: 'Bergmönch öffnet Anki-Stapel und plant die Wiederholungen. Gelernt wird ein paar Minuten am Tag, und schwierige Karten kommen früher wieder als die, die schon sitzen. Die App ist kostenlos, quelloffen und braucht kein Konto.',
   name: 'Der Name stammt aus einer Bergbausage im Harz: ein geisterhafter Mönch, der mit einem Grubenlicht durch die Stollen geht.',
   cta: { apk: 'Android-APK laden', testflight: 'An der TestFlight-Beta teilnehmen', testflightSoon: 'TestFlight: kommt bald', source: 'Quelltext auf GitHub' },
   demo: {
@@ -125,11 +125,11 @@ export const de: Copy = {
   },
   featuresTitle: 'Was die App kann',
   features: [
-    { title: 'Deine Anki-Stapel, unverändert', text: 'Jede .apkg-Datei lässt sich importieren. Bergmönch nutzt Ankis eigene Planungslogik. Karten, Notiztypen und Lernverlauf verhalten sich deshalb wie in Anki.' },
-    { title: 'Minuten statt Rückstand', text: 'Der Startbildschirm zeigt, wie viele Minuten die Wiederholungen heute dauern, geschätzt aus deinen eigenen Antwortzeiten. Ein Kalender zeigt die Tage, an denen du gelernt hast. Eine Serie, die reißen kann, gibt es nicht.' },
+    { title: 'Anki-Stapel, unverändert', text: 'Jede .apkg-Datei lässt sich importieren. Bergmönch nutzt Ankis eigene Planungslogik. Karten, Notiztypen und Lernverlauf verhalten sich deshalb wie in Anki.' },
+    { title: 'Minuten statt Rückstand', text: 'Der Startbildschirm zeigt, wie viele Minuten die Wiederholungen heute dauern, geschätzt aus den eigenen Antwortzeiten. Ein Kalender zeigt die Tage, an denen gelernt wurde. Eine Serie, die reißen kann, gibt es nicht.' },
     { title: 'Zwei Tasten für den Anfang', text: 'Vergessen oder Gewusst. Ankis vier Bewertungen lassen sich in den Einstellungen einschalten.' },
     { title: 'Ein Prüfungstermin pro Stapel', text: 'Mit einem Prüfungstermin verkürzt Bergmönch die Abstände, sodass jede Karte vor der Prüfung noch einmal drankommt.' },
-    { title: 'Gut lesbare Karten', text: 'Schriftgröße, Schriftstärke und Zeilenabstand der Karten sind einstellbar. Es gibt ein helles und ein dunkles Design. Bei Code-Karten tippst du die Ausgabe selbst ein.' },
+    { title: 'Gut lesbare Karten', text: 'Schriftgröße, Schriftstärke und Zeilenabstand der Karten sind einstellbar. Es gibt ein helles und ein dunkles Design. Bei Code-Karten wird die Ausgabe eingetippt.' },
     { title: 'Abgleich mit dem eigenen Server', text: 'Bergmönch gleicht mit einem selbst betriebenen Anki-Sync-Server ab. AnkiWeb lässt keine Apps von Dritten zu, deshalb verbindet sich Bergmönch nicht damit.' },
   ],
   whyTitle: 'Warum die App so arbeitet',
@@ -137,9 +137,9 @@ export const de: Copy = {
   whyHead: ['Einstellung', 'Was Bergmönch tut', 'Warum'],
   why: [
     { what: 'Planung', does: 'FSRS, das Verfahren, das Anki heute mitliefert.', why: 'Im offenen Vergleichstest sagt es das Vergessen genauer vorher als das ältere SM-2.' },
-    { what: 'Behaltensziel', does: '90 %, einstellbar von 70 bis 97 %. Der tägliche Aufwand wird angezeigt, bevor du etwas änderst.', why: 'Kein Prozentwert ist für alle der beste. Über 90 % steigt die Zahl der Wiederholungen stark an.' },
+    { what: 'Behaltensziel', does: '90 %, einstellbar von 70 bis 97 %. Vor jeder Änderung zeigt die App den täglichen Aufwand an.', why: 'Kein Prozentwert ist für alle der beste. Über 90 % steigt die Zahl der Wiederholungen stark an.' },
     { what: 'Prüfungstermin', does: 'Die Abstände werden durch die Zeit bis zur Prüfung begrenzt.', why: 'Cepeda et al. (2008): Der beste Abstand zwischen zwei Wiederholungen hängt davon ab, wie weit die Prüfung entfernt ist.' },
-    { what: 'Bewertung', does: 'Du siehst die ganze Antwort und bewertest dich dann selbst. Die App bewertet nichts für dich.', why: 'Mit der Antwort vor Augen schätzt man die eigene Erinnerung genauer ein.' },
+    { what: 'Bewertung', does: 'Erst erscheint die ganze Antwort, dann bewertet man sich selbst. Die App bewertet nichts automatisch.', why: 'Mit der Antwort vor Augen schätzt man die eigene Erinnerung genauer ein.' },
     { what: 'Weggelassen', does: 'Serienzähler, Ranglisten, Punkte, Multiple Choice.', why: 'Sie belohnen das Öffnen der App. Dass man mehr behält, zeigen sie nicht.' },
   ],
   whyMore: 'Alle Voreinstellungen und ihre Quellen (englisch)',
@@ -161,7 +161,7 @@ export const de: Copy = {
   openTitle: 'Quelloffen',
   open: [
     'Bergmönch ist freie Software unter der GNU Affero General Public License, Version 3. Die App baut auf Ankis Backend auf, das unter derselben Lizenz steht. Bergmönch ist ein unabhängiges Projekt und steht in keiner Verbindung zu Anki oder AnkiWeb.',
-    'Es gibt kein Konto, keine Werbung und keine Nutzungsauswertung. Karten und Lernverlauf bleiben auf deinem Gerät, solange du keinen eigenen Sync-Server einrichtest.',
+    'Es gibt kein Konto, keine Werbung und keine Nutzungsauswertung. Karten und Lernverlauf bleiben auf dem Gerät, solange kein eigener Sync-Server eingerichtet ist.',
   ],
   privacy: 'Datenschutz',
 };
