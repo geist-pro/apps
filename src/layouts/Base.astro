@@ -1,0 +1,85 @@
+---
+/**
+ * Base layout, after geist.pro: html[data-palette][data-scheme], the visitor's colour scheme applied before first
+ * paint (localStorage 'scheme': auto | dark, anything else light), two preloaded fonts, skip link, Header, main,
+ * Footer. One small script draws the section rules in as they enter the viewport; with reduced motion or without
+ * JS everything is simply visible.
+ */
+import '../styles/global.css';
+import { site } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+  title: string;
+  /** complete <title>, used as is */
+  fullTitle?: string;
+  description?: string;
+  lang?: 'en' | 'de';
+  noindex?: boolean;
+  ogImage?: string;
+  alternates?: { lang: 'en' | 'de' | 'x-default'; href: string }[];
+}
+
+const { title, fullTitle, description = site.description, lang = 'en', noindex = false, ogImage, alternates = [] } = Astro.props;
+const pageTitle = fullTitle ?? `${title} · ${site.name}`;
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const image = ogImage ? new URL(ogImage, site.url).toString() : undefined;
+const schemeScript =
+  "try{var h=document.documentElement,s=localStorage.getItem('scheme');h.setAttribute('data-scheme',s==='auto'||s==='dark'?s:'light');h.classList.add('js')}catch(e){}";
+---
+
+<!doctype html>
+<html lang={lang} data-brand="geist" data-palette="geist" data-scheme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline set:html={schemeScript} />
+    <meta name="theme-color" content="#193f82" />
+    <link rel="icon" type="image/svg+xml" href="/icons/geist/favicon.svg" />
+    <link rel="preload" href="/fonts/noto-serif-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/nunito-200-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={new URL(a.href, site.url).toString()} />)}
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{lang === 'de' ? 'Zum Inhalt' : 'Skip to content'}</a>
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      // Section rules draw in from the left once, when they enter the viewport.
+      const rules = document.querySelectorAll<HTMLElement>('[data-rule]');
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                (e.target as HTMLElement).dataset.rule = 'in';
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px' },
+        );
+        rules.forEach((r) => io.observe(r));
+      } else {
+        rules.forEach((r) => (r.dataset.rule = 'in'));
+      }
+    </script>
+  </body>
+</html>

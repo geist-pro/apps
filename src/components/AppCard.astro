@@ -1,0 +1,125 @@
+---
+/**
+ * One app on the index: icon tile, name in Nunito 200, status, tagline, summary, platforms. An app with a page is one
+ * big link (the title's link covers the card); an app without one is listed, not linked. On hover the accent rule
+ * under the icon runs the card's full width.
+ */
+import { Image } from 'astro:assets';
+import { STATUS_LABEL, type App } from '../data/apps';
+
+export interface Props {
+  app: App;
+}
+const { app } = Astro.props;
+---
+
+<article class:list={['app', { 'app--linked': app.href }]}>
+  <div class="app__icon">
+    <Image src={app.icon} alt="" width={160} height={160} widths={[160, 320]} sizes="160px" loading="eager" />
+  </div>
+  <div class="app__rule" aria-hidden="true"></div>
+  <div class="app__body">
+    <p class="app__status">
+      <span class:list={['status', app.status === 'soon' ? 'status--outline' : 'status--accent']}>{STATUS_LABEL[app.status]}</span>
+      <span>{app.platforms.join(', ')}</span>
+    </p>
+    <h3 class="app__name">
+      {app.href ? <a class="app__link" href={app.href}>{app.name}</a> : app.name}
+    </h3>
+    <p class="app__tagline">{app.tagline}</p>
+    <p class="app__summary">{app.summary}</p>
+  </div>
+</article>
+
+<style>
+  .app {
+    position: relative;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-areas: 'icon body' 'rule rule';
+    gap: var(--space-4) var(--space-5);
+    padding-bottom: var(--space-2);
+  }
+  .app__icon {
+    grid-area: icon;
+  }
+  .app__icon :global(img) {
+    display: block;
+    width: 96px;
+    height: 96px;
+  }
+  .app__body {
+    grid-area: body;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .app__rule {
+    grid-area: rule;
+    height: 2px;
+    background: var(--line);
+    position: relative;
+  }
+  .app__rule::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--brand);
+    transform: scaleX(0.12);
+    transform-origin: left center;
+    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  .app--linked:hover .app__rule::after,
+  .app--linked:focus-within .app__rule::after {
+    transform: scaleX(1);
+  }
+  .app__status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-3);
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .app__name {
+    margin: var(--space-1) 0 0;
+    font-family: var(--font-sans);
+    font-weight: 200;
+    font-size: 2rem;
+    line-height: 1.1;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+  .app__link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .app__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .app__tagline {
+    margin: 0;
+    font-weight: 700;
+  }
+  .app__summary {
+    margin: 0;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+  @media (min-width: 640px) {
+    .app {
+      grid-template-columns: 128px minmax(0, 1fr);
+    }
+    .app__icon :global(img) {
+      width: 128px;
+      height: 128px;
+    }
+  }
+</style>

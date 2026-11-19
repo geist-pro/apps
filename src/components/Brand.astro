@@ -1,0 +1,49 @@
+---
+/** Wordmark in the header: ghost, "GEIST" in Nunito 200, and the line "Apps" where geist.pro has the institute. */
+import BrandMark from './BrandMark.astro';
+---
+
+<a class="brand" href="/">
+  <span class="brand__mark"><BrandMark size={36} /></span>
+  <span class="brand__text">
+    <span class="brand__word">GEIST</span>
+    <span class="brand__line">Apps</span>
+  </span>
+  <span class="visually-hidden">, home</span>
+</a>
+
+<style>
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--header-h);
+    color: var(--on-brand);
+    text-decoration: none;
+  }
+  .brand__mark {
+    flex: 0 0 auto;
+    display: block;
+    width: 36px;
+    height: 36px;
+  }
+  .brand__text {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    line-height: 1.1;
+  }
+  .brand__word {
+    font-family: var(--font-sans);
+    font-weight: 200;
+    font-size: 2rem;
+    letter-spacing: 0.02em;
+  }
+  .brand__line {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.9;
+  }
+</style>

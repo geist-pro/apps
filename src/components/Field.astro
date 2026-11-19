@@ -1,0 +1,92 @@
+---
+/**
+ * The index hero picture: a flat composition in the GEIST shape language (square, disc, peak, the ghost), no
+ * gradient, no shadow. Each layer shifts a little with the pointer; the ghost blinks once when the pointer arrives.
+ * Decorative, hidden from assistive technology; still under reduced motion.
+ */
+---
+
+<div class="field" data-field aria-hidden="true">
+  <svg viewBox="0 0 520 440" preserveAspectRatio="xMidYMid meet" focusable="false">
+    <g data-depth="6"><rect class="f-ground" x="40" y="60" width="300" height="300"></rect></g>
+    <g data-depth="14"><polygon class="f-brand" points="230,360 380,90 530,360"></polygon></g>
+    <g data-depth="22"><polygon class="f-accent" points="330,360 420,220 510,360"></polygon></g>
+    <g data-depth="10"><circle class="f-accent" cx="118" cy="128" r="46"></circle></g>
+    <g data-depth="30">
+      <g transform="translate(96 150) scale(0.86)">
+        <polygon class="f-ink" points="25.2,242.8 26.3,97.3 51,41.6 128.5,12.9 202,39.1 229.3,94.4 231.8,243.1 183.1,199.1 128.5,241.3 74.3,199.1"></polygon>
+        <g class="f-eyes">
+          <circle class="f-surface" cx="91.9" cy="99.8" r="21.1"></circle>
+          <circle class="f-accent" cx="166.1" cy="99.8" r="21.1"></circle>
+        </g>
+      </g>
+    </g>
+    <g data-depth="18"><rect class="f-ink" x="20" y="372" width="500" height="10"></rect></g>
+  </svg>
+</div>
+
+<style>
+  .field {
+    width: 100%;
+    max-width: 520px;
+  }
+  .field svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .field :global(g[data-depth]) {
+    transition: transform 500ms cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  .f-ground {
+    fill: var(--surface-2);
+  }
+  .f-brand {
+    fill: var(--brand);
+  }
+  .f-accent {
+    fill: var(--accent);
+  }
+  .f-ink {
+    fill: var(--ink);
+  }
+  .f-surface {
+    fill: var(--surface);
+  }
+  .f-eyes {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .field:global(.is-blink) .f-eyes {
+    animation: blink 260ms ease-in-out 1;
+  }
+  @keyframes blink {
+    50% {
+      transform: scaleY(0.08);
+    }
+  }
+</style>
+
+<script>
+  const field = document.querySelector<HTMLElement>('[data-field]');
+  if (field && matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const layers = [...field.querySelectorAll<SVGGElement>('g[data-depth]')];
+    const host = field.closest('section') ?? field;
+    host.addEventListener('pointerenter', () => {
+      field.classList.remove('is-blink');
+      void field.offsetWidth;
+      field.classList.add('is-blink');
+    });
+    host.addEventListener('pointermove', (e) => {
+      const r = host.getBoundingClientRect();
+      const x = ((e as PointerEvent).clientX - r.left) / r.width - 0.5;
+      const y = ((e as PointerEvent).clientY - r.top) / r.height - 0.5;
+      for (const g of layers) {
+        const d = Number(g.dataset.depth) || 0;
+        g.style.transform = `translate(${(-x * d).toFixed(1)}px, ${(-y * d * 0.6).toFixed(1)}px)`;
+      }
+    });
+    host.addEventListener('pointerleave', () => layers.forEach((g) => (g.style.transform = '')));
+  }
+</script>

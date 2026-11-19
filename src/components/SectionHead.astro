@@ -1,0 +1,49 @@
+---
+/**
+ * SectionHead, after geist.pro: a 1px --ink rule, an optional mono eyebrow, the title in Nunito 200. Here the rule
+ * is its own element so it can draw in from the left when the section enters the viewport (Base.astro).
+ */
+export interface Props {
+  title: string;
+  eyebrow?: string;
+  id?: string;
+}
+const { title, eyebrow, id } = Astro.props;
+---
+
+<div class="section-head">
+  <div class="section-head__rule" data-rule aria-hidden="true"></div>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h2 class="section-head__title" id={id}>{title}</h2>
+</div>
+
+<style>
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: var(--space-6);
+  }
+  .section-head__rule {
+    height: 1px;
+    margin-bottom: var(--space-3);
+    background: var(--ink);
+    transform-origin: left center;
+  }
+  :global(html.js) .section-head__rule {
+    transform: scaleX(0);
+    transition: transform 700ms cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  :global(html.js) .section-head__rule[data-rule='in'] {
+    transform: scaleX(1);
+  }
+  .section-head__title {
+    margin: 0;
+    color: var(--ink);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .section-head__rule {
+      transform: none;
+    }
+  }
+</style>

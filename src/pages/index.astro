@@ -1,0 +1,142 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import AppCard from '../components/AppCard.astro';
+import Field from '../components/Field.astro';
+import { apps } from '../data/apps';
+import { site } from '../data/site';
+---
+
+<Base title="Apps" fullTitle="GEIST Apps · TU Clausthal" description="Apps from GEIST, the Human-Centered Information Systems group at TU Clausthal: Bergmönch, a flashcard app that opens Anki decks, and Klopfgeist, coming soon.">
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__text">
+        <p class="eyebrow">GEIST · TU Clausthal</p>
+        <h1 class="hero__title">Apps.</h1>
+        <p class="lede">
+          We are a research group at TU Clausthal. Some of what we build for our own teaching and research turns into
+          apps that other people can use. This is where they live.
+        </p>
+        <p class="hero__more"><a href={site.home}>About the group</a></p>
+      </div>
+      <Field />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="apps">
+    <div class="container">
+      <SectionHead title="The apps" id="apps" />
+      <div class="apps">
+        {apps.map((app) => <AppCard app={app} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="how">
+    <div class="container">
+      <SectionHead title="How we make them" id="how" />
+      <div class="notes">
+        <div>
+          <h3>No ads, no tracking</h3>
+          <p>The apps do not show ads and do not send us usage data. This site sets no cookies.</p>
+        </div>
+        <div>
+          <h3>Open where we can</h3>
+          <p>
+            Bergmönch is open source, and so are its course decks. You can read the code, build it yourself and send
+            corrections.
+          </p>
+        </div>
+        <div>
+          <h3>Made for our own use first</h3>
+          <p>They start as things we need ourselves, for a lecture or for reviewing papers. We keep using them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero__inner {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+    padding-block: var(--space-10) var(--space-8);
+  }
+  .hero__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .hero__title {
+    margin: 0;
+    font-size: clamp(3.5rem, 2.4rem + 6vw, 7rem);
+    line-height: 0.95;
+  }
+  .hero__more {
+    margin: 0;
+  }
+  .hero__more a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .apps {
+    display: grid;
+    gap: var(--space-10) var(--space-12);
+  }
+  .notes {
+    display: grid;
+    gap: var(--space-6) var(--space-10);
+  }
+  .notes h3 {
+    margin-bottom: var(--space-2);
+    color: var(--ink);
+  }
+  .notes p {
+    margin: 0;
+    max-width: 40ch;
+  }
+  @media (min-width: 768px) {
+    .apps {
+      grid-template-columns: 1fr 1fr;
+    }
+    .notes {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .hero__inner {
+      grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
+      gap: var(--space-16);
+      padding-block: var(--space-16) var(--space-12);
+    }
+    .hero__inner :global(.field) {
+      justify-self: end;
+    }
+  }
+  /* one page-load sequence: text first, then the picture */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__text > * {
+      animation: rise 600ms cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    }
+    .hero__text > :nth-child(2) {
+      animation-delay: 70ms;
+    }
+    .hero__text > :nth-child(3) {
+      animation-delay: 140ms;
+    }
+    .hero__text > :nth-child(4) {
+      animation-delay: 210ms;
+    }
+    .hero__inner :global(.field) {
+      animation: rise 800ms 200ms cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+</style>

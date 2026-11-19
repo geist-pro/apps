@@ -1,0 +1,118 @@
+---
+/**
+ * ThemeSwitch: the visitor's colour scheme (auto | dark | light; default light). variant 'icon' = 28x28 half-filled
+ * circle inside a 44px button at the end of the header nav, aria-label "Theme", no text; variant 'line' = the "Theme:
+ * auto" line of the footer colophon. A tap cycles auto -> dark -> light, writes localStorage 'scheme' and
+ * html[data-scheme] (the token CSS resolves 'auto'); every switch button mirrors the state in data-state. Nearly
+ * invisible until needed. The icon and the label follow html[data-scheme] in CSS, so they are right before the
+ * handler runs. One small script per page.
+ */
+export interface Props {
+  variant?: 'icon' | 'line';
+  class?: string;
+}
+
+const { variant = 'icon', class: className } = Astro.props;
+---
+
+{
+  variant === 'icon' ? (
+    <button class:list={['theme-switch', className]} type="button" aria-label="Theme" title="Theme: auto, dark or light" data-theme-switch data-state="light">
+      <span class="theme-switch__box">
+        <svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true" focusable="false">
+          <circle class="theme-switch__ring" cx="14" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="1.5" />
+          <path class="theme-switch__half" d="M14,6A8,8 0 0,1 14,22Z" fill="none" />
+        </svg>
+      </span>
+    </button>
+  ) : (
+    <button class:list={['theme-switch-line', className]} type="button" data-theme-switch data-state="light">
+      Theme: <span class="theme-switch__state" />
+    </button>
+  )
+}
+
+<style>
+  .theme-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+  .theme-switch__box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid currentColor;
+  }
+  :global(html[data-scheme='dark']) .theme-switch__ring {
+    fill: currentColor;
+  }
+  :global(html[data-scheme='auto']) .theme-switch__half {
+    fill: currentColor;
+  }
+  .theme-switch-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5ch; /* the space after "Theme:" (flex drops it) */
+    min-height: 44px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+  /* label before the handler runs (CSS follows html[data-scheme]); the handler then writes the text itself */
+  .theme-switch__state:empty::before {
+    content: 'light';
+  }
+  :global(html[data-scheme='auto']) .theme-switch__state:empty::before {
+    content: 'auto';
+  }
+  :global(html[data-scheme='dark']) .theme-switch__state:empty::before {
+    content: 'dark';
+  }
+</style>
+
+<script>
+  const html = document.documentElement;
+  const NEXT: Record<string, string> = { auto: 'dark', dark: 'light', light: 'auto' };
+  const current = () => html.getAttribute('data-scheme') || 'light';
+  const sync = () => {
+    const s = current();
+    document.querySelectorAll<HTMLElement>('[data-theme-switch]').forEach((b) => {
+      b.dataset.state = s;
+      const label = b.querySelector('.theme-switch__state');
+      if (label) label.textContent = s;
+    });
+  };
+  sync();
+  // the preview options bar (Switcher) sets data-scheme too
+  new MutationObserver(sync).observe(html, { attributes: true, attributeFilter: ['data-scheme'] });
+  document.addEventListener('click', (e) => {
+    const b = (e.target as Element | null)?.closest('[data-theme-switch]');
+    if (!b) return;
+    const next = NEXT[current()] ?? 'auto';
+    html.setAttribute('data-scheme', next);
+    try {
+      localStorage.setItem('scheme', next);
+    } catch {
+      /* private mode: the choice lasts for this page only */
+    }
+    sync();
+  });
+</script>

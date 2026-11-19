@@ -1,0 +1,131 @@
+---
+/**
+ * Header: the geist.pro header (6px accent strip, 56px brand bar, 44px targets, no hamburger, no JS) with this
+ * site's links: Apps, one link per app that has a page, GitHub, and geist.pro as the button at the end.
+ */
+import Brand from './Brand.astro';
+import ThemeSwitch from './ThemeSwitch.astro';
+import { apps } from '../data/apps';
+import { site } from '../data/site';
+
+const pathname = Astro.url.pathname;
+const items = [
+  { label: 'Apps', href: '/', current: pathname === '/' },
+  ...apps.filter((a) => a.href).map((a) => ({ label: a.name, href: a.href!, current: pathname.startsWith(a.href!) })),
+];
+---
+
+<header class="header">
+  <div class="header__accent" aria-hidden="true"></div>
+  <div class="header__bar">
+    <div class="container header__inner">
+      <Brand />
+      <nav class="nav" aria-label="Main">
+        <ul class="nav__list">
+          {
+            items.map((item) => (
+              <li class="nav__item">
+                <a class="nav__link" href={item.href} aria-current={item.current ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li class="nav__item">
+            <a class="nav__link" href={site.github} rel="noopener">GitHub</a>
+          </li>
+          <li class="nav__item">
+            <a class="nav__link nav__link--cta" href={site.home}>geist.pro</a>
+          </li>
+          <li class="nav__item nav__item--switch">
+            <ThemeSwitch />
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header__accent {
+    height: var(--accent-bar);
+    background: var(--accent);
+  }
+  .header__bar {
+    background: var(--brand-bar);
+    color: var(--on-brand);
+  }
+  .header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 var(--space-6);
+    min-height: var(--header-h);
+  }
+  .nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 6px 0;
+  }
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--space-2);
+    color: var(--on-brand);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--size-nav);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+  .nav__link:hover {
+    border-bottom-color: var(--on-brand);
+  }
+  .nav__link[aria-current='page'] {
+    border-bottom-color: var(--accent);
+  }
+  .nav__link--cta {
+    margin-left: var(--space-2);
+    padding: 0 var(--space-4);
+    background: var(--on-brand);
+    color: var(--brand-bar);
+    border: 0;
+    border-radius: var(--radius-button);
+    transition: background-color var(--motion), color var(--motion);
+  }
+  .nav__link--cta:hover,
+  .nav__link--cta[aria-current='page'] {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .nav__link--icon {
+    padding: 0 12px; /* 20px glyph in a 44px target */
+  }
+  .nav__item--switch {
+    display: flex;
+    align-items: center;
+    margin-left: var(--space-1);
+  }
+  .header :global(:focus-visible) {
+    outline-color: var(--on-brand);
+  }
+  /* brand + nav fit one row from 720px; below that the nav takes its own row, as on geist.pro */
+  @media (max-width: 719px) {
+    .nav {
+      flex-basis: 100%;
+    }
+    .nav__list {
+      padding-top: 0;
+      margin-left: calc(-1 * var(--space-2));
+    }
+    .nav__item--switch {
+      margin-left: auto;
+    }
+  }
+</style>

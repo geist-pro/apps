@@ -1,0 +1,128 @@
+---
+/**
+ * PageHead: head of every inner page (all but home and 404). A --brand-bar wedge under the header (72px at the left
+ * edge tapering to 12px at the right; 40 to 8px under 640px), then breadcrumbs (44px targets), kicker, the page H1
+ * (this component renders it so each page keeps one H1), the German original title under it when `titleDe` is
+ * given (lang="de", mono, muted; news posts and research pages) and the lede. RecruitingBanner, when it exists, sits between
+ * the header and the wedge. Extra head content (readouts, chip rows) goes in the default slot; a row of status badges
+ * above the H1 goes in the slot named "badges" (project and thesis pages). The last crumb is the page itself (text,
+ * aria-current) unless `parentTrail` says the trail only names the parents (news posts: Home / News / 2026, the title
+ * being the H1 right below); then every crumb is a link. The trail is not part of the search index.
+ */
+type Crumb = { name: string; href: string };
+
+export interface Props {
+  title: string;
+  kicker?: string;
+  /** German original title, printed under the H1 in lang="de" */
+  titleDe?: string;
+  lede?: string;
+  breadcrumbs?: Crumb[];
+  /** true when the trail ends with a parent of the page, not the page itself: the last crumb is then a link too */
+  parentTrail?: boolean;
+  class?: string;
+}
+
+const { title, kicker, titleDe, lede, breadcrumbs = [], parentTrail = false, class: className } = Astro.props;
+---
+
+<div class="page-head__wedge" aria-hidden="true"></div>
+<div class:list={['page-head', className]}>
+  <div class="container page-head__inner">
+    {
+      breadcrumbs.length > 1 && (
+        <nav class="page-head__crumbs meta" aria-label="Breadcrumb">
+          <ol>
+            {breadcrumbs.map((c, i) =>
+              i < breadcrumbs.length - 1 || parentTrail ? (
+                <li>
+                  <a href={c.href}>{c.name}</a>
+                </li>
+              ) : (
+                <li aria-current="page">{c.name}</li>
+              ),
+            )}
+          </ol>
+        </nav>
+      )
+    }
+    <slot name="badges" />
+    {kicker && <p class="page-head__kicker">{kicker}</p>}
+    <h1 class="page-head__title">{title}</h1>
+    {
+      titleDe && (
+        <p class="page-head__de" lang="de">
+          {titleDe}
+        </p>
+      )
+    }
+    {lede && <p class="page-head__lede lede">{lede}</p>}
+    <slot />
+  </div>
+</div>
+
+<style>
+  .page-head__wedge {
+    height: 72px;
+    background: var(--brand-bar);
+    clip-path: polygon(0 0, 100% 0, 100% 12px, 0 100%);
+  }
+  .page-head__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-block: var(--space-6) var(--space-8);
+  }
+  .page-head__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--size-label);
+  }
+  .page-head__crumbs li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+  }
+  .page-head__crumbs a {
+    display: inline-block;
+    padding: 12px 6px; /* 44px hit area in both directions ("Home" alone is 35px wide) without moving the text */
+    margin: -12px -6px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .page-head__crumbs a:hover {
+    text-decoration: underline;
+  }
+  .page-head__kicker {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand);
+  }
+  .page-head__title {
+    margin: 0;
+  }
+  .page-head__de {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .page-head__lede {
+    margin: 0;
+  }
+  @media (max-width: 639px) {
+    .page-head__wedge {
+      height: 40px;
+      clip-path: polygon(0 0, 100% 0, 100% 8px, 0 100%);
+    }
+  }
+</style>

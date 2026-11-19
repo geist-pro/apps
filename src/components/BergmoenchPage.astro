@@ -1,0 +1,549 @@
+---
+/**
+ * The Bergmönch page in one language (copy: src/data/bergmoench.ts). Head with the app icon, claim and downloads,
+ * and a phone that shows a real card: "Show answer" swaps the question for the answer, as in the app.
+ * Then features, the reasons for the defaults, the course decks, downloads and the licence.
+ */
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SectionHead from './SectionHead.astro';
+import type { Copy } from '../data/bergmoench';
+import { bergmoenchLinks as L } from '../data/apps';
+import icon from '../assets/bergmoench-icon.png';
+import question from '../assets/bergmoench-question.png';
+import answer from '../assets/bergmoench-answer.png';
+import home from '../assets/bergmoench-home.png';
+
+export interface Props {
+  t: Copy;
+}
+const { t } = Astro.props;
+const alternates = [
+  { lang: 'en' as const, href: '/bergmoench/' },
+  { lang: 'de' as const, href: '/bergmoench/de/' },
+  { lang: 'x-default' as const, href: '/bergmoench/' },
+];
+---
+
+<Base title={t.title} fullTitle={`${t.title} · ${t.claim.replace(/\.$/, '')}`} description={t.description} lang={t.lang} alternates={alternates}>
+  <div class="wedge" aria-hidden="true"></div>
+  <section class="head">
+    <div class="container head__inner">
+      <div class="head__text">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">{t.crumbs[0]}</a><span aria-hidden="true">/</span><span aria-current="page">{t.crumbs[1]}</span>
+          <a class="crumbs__lang" href={t.otherPath} hreflang={t.lang === 'en' ? 'de' : 'en'} lang={t.lang === 'en' ? 'de' : 'en'}>{t.otherLabel}</a>
+        </nav>
+        <div class="head__id">
+          <Image class="head__icon" src={icon} alt="" width={88} height={88} widths={[88, 176]} sizes="88px" loading="eager" />
+          <h1 class="head__title">{t.title}</h1>
+        </div>
+        <p class="head__claim">{t.claim}</p>
+        <p class="lede">{t.lede}</p>
+        <div class="head__cta">
+          <a class="button" href={L.apk} rel="noopener">{t.cta.apk}</a>
+          {
+            L.testflight ? (
+              <a class="button button--ghost" href={L.testflight} rel="noopener">{t.cta.testflight}</a>
+            ) : (
+              <span class="head__soon">{t.cta.testflightSoon}</span>
+            )
+          }
+          <a class="head__source" href={L.source} rel="noopener">{t.cta.source}</a>
+        </div>
+        <p class="head__name">{t.name}</p>
+      </div>
+
+      <figure class="demo" data-demo data-side="q">
+        <div class="phone">
+          <div class="phone__screen">
+            <Image class="phone__img phone__img--q" src={question} alt={t.demo.questionAlt} width={393} height={852} widths={[393, 786]} sizes="(min-width: 480px) 320px, 70vw" loading="eager" />
+            <Image class="phone__img phone__img--a" src={answer} alt={t.demo.answerAlt} width={393} height={852} widths={[393, 786]} sizes="(min-width: 480px) 320px, 70vw" loading="lazy" />
+          </div>
+        </div>
+        <figcaption class="demo__cap">
+          <span>{t.demo.caption}</span>
+          <button class="button button--ghost demo__btn" type="button" data-demo-toggle data-show={t.demo.show} data-again={t.demo.again} aria-pressed="false">{t.demo.show}</button>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="features">
+    <div class="container">
+      <SectionHead title={t.featuresTitle} id="features" />
+      <div class="features">
+        {
+          t.features.map((f) => (
+            <div class="feature">
+              <h3>{f.title}</h3>
+              <p>{f.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="why">
+    <div class="container why">
+      <div class="why__main">
+        <SectionHead title={t.whyTitle} id="why" />
+        <p class="why__intro">{t.whyIntro}</p>
+        <div class="why__table" role="table" aria-labelledby="why">
+          <div class="why__row why__row--head" role="row">
+            {t.whyHead.map((h) => <span role="columnheader">{h}</span>)}
+          </div>
+          {
+            t.why.map((r) => (
+              <div class="why__row" role="row">
+                <span class="why__what" role="rowheader">{r.what}</span>
+                <span role="cell">{r.does}</span>
+                <span class="why__why" role="cell">{r.why}</span>
+              </div>
+            ))
+          }
+        </div>
+        <p class="why__more"><a href={L.defaults} rel="noopener">{t.whyMore}</a></p>
+      </div>
+      <div class="why__shot">
+        <div class="phone phone--sm">
+          <div class="phone__screen">
+            <Image class="phone__img" src={home} alt="" width={393} height={852} widths={[393, 786]} sizes="240px" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="decks">
+    <div class="container decks">
+      <div>
+        <SectionHead title={t.decksTitle} id="decks" />
+        <p class="decks__intro">{t.decksIntro}</p>
+        <ul class="link-rows decks__list">
+          {
+            t.decks.map((d) => (
+              <li>
+                <a href={d.href} rel="noopener">
+                  <span class="decks__name">
+                    <strong>{d.name}</strong>
+                    <span>{d.meta}</span>
+                  </span>
+                  <span>GitHub</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="fix">
+        <h3>{t.fixTitle}</h3>
+        <ol>
+          {t.fixSteps.map((s) => <li>{s}</li>)}
+        </ol>
+        <p>{t.fixNote}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="get">
+    <div class="container">
+      <SectionHead title={t.getTitle} id="get" />
+      <div class="get">
+        {
+          t.downloads.map((d) => (
+            <div class="get__item">
+              <p class="eyebrow">{d.platform}</p>
+              <h3 class="get__title">{d.title}</h3>
+              <p class="get__note">{d.note}</p>
+              {d.href ? (
+                <a class="button button--ghost" href={d.href} rel="noopener">{d.cta}</a>
+              ) : (
+                <span class="status status--outline">{d.cta}</span>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="open">
+    <div class="container">
+      <SectionHead title={t.openTitle} id="open" />
+      <div class="open">
+        {t.open.map((p) => <p>{p}</p>)}
+        <p><a href="/bergmoench/privacy/">{t.privacy}</a></p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .wedge {
+    height: 72px;
+    background: var(--brand-bar);
+    clip-path: polygon(0 0, 100% 0, 100% 12px, 0 100%);
+  }
+  .head__inner {
+    display: grid;
+    gap: var(--space-10);
+    padding-block: var(--space-6) var(--space-8);
+  }
+  .head__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .crumbs a:hover {
+    text-decoration: underline;
+  }
+  .crumbs__lang {
+    margin-left: auto;
+    padding-inline: var(--space-3);
+    border: 1px solid var(--line);
+    color: var(--brand) !important;
+  }
+  .head__id {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .head__icon {
+    flex: 0 0 auto;
+    width: 88px;
+    height: 88px;
+  }
+  .head__title {
+    margin: 0;
+    font-size: clamp(2.75rem, 1.9rem + 4.2vw, 5rem);
+  }
+  .head__claim {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.3rem);
+    line-height: 1.4;
+    color: var(--muted);
+    max-width: 32ch;
+  }
+  .head__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin-top: var(--space-2);
+  }
+  .head__soon {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border: 1px dashed var(--line);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--size-nav);
+    color: var(--muted);
+  }
+  .head__source {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .head__name {
+    margin: var(--space-2) 0 0;
+    font-size: var(--size-meta);
+    color: var(--muted);
+    max-width: 52ch;
+  }
+
+  /* the phone: a flat frame, no shadow, square as the rest of the site */
+  .phone {
+    width: min(320px, 70vw);
+    padding: 8px;
+    background: #161616;
+    outline: 1px solid var(--line);
+  }
+  .phone--sm {
+    width: 240px;
+  }
+  .phone__screen {
+    position: relative;
+    aspect-ratio: 393 / 852;
+    overflow: hidden;
+    background: #0b1220;
+  }
+  .phone__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .phone__img--a {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 520ms cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  .demo[data-side='a'] .phone__img--a {
+    clip-path: inset(0 0 0 0);
+  }
+  .demo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin: 0;
+  }
+  .demo__cap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    max-width: 320px;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  :global(html:not(.js)) .demo__btn {
+    display: none;
+  }
+
+  .features {
+    display: grid;
+    gap: var(--space-8) var(--space-10);
+  }
+  .feature h3,
+  .fix h3 {
+    margin-bottom: var(--space-2);
+    color: var(--ink);
+  }
+  .feature p {
+    margin: 0;
+    max-width: 42ch;
+  }
+
+  .why {
+    display: grid;
+    gap: var(--space-10);
+  }
+  .why__intro,
+  .decks__intro {
+    margin: 0 0 var(--space-6);
+    max-width: var(--measure);
+  }
+  .why__row {
+    display: grid;
+    gap: var(--space-1);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  .why__row--head {
+    display: none;
+  }
+  .why__what {
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand);
+  }
+  .why__why {
+    color: var(--muted);
+  }
+  .why__more {
+    margin: var(--space-4) 0 0;
+  }
+  .why__more a,
+  .open a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .why__shot {
+    display: none;
+  }
+
+  .decks {
+    display: grid;
+    gap: var(--space-10);
+  }
+  .decks__list a {
+    text-transform: none;
+    letter-spacing: 0;
+    padding-block: var(--space-3);
+  }
+  .decks__name {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .decks__name strong {
+    font-family: var(--font-serif);
+    font-size: var(--size-body);
+    color: var(--ink);
+  }
+  .decks__name span {
+    color: var(--muted);
+  }
+  .fix {
+    padding: var(--space-5);
+    border: 1px solid var(--ink);
+    align-self: start;
+  }
+  .fix ol {
+    margin: 0 0 var(--space-4);
+    padding-left: 1.3em;
+  }
+  .fix li {
+    margin-bottom: var(--space-2);
+  }
+  .fix p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .get {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .get__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .get__title {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 200;
+    font-size: 2rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+  .get__note {
+    margin: 0 0 var(--space-2);
+    max-width: 38ch;
+  }
+  .open {
+    max-width: var(--measure);
+  }
+  .open p {
+    margin: 0 0 var(--space-4);
+  }
+
+  @media (max-width: 639px) {
+    .wedge {
+      height: 40px;
+      clip-path: polygon(0 0, 100% 0, 100% 8px, 0 100%);
+    }
+  }
+  @media (min-width: 640px) {
+    .features {
+      grid-template-columns: 1fr 1fr;
+    }
+    .get {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 768px) {
+    .why__row {
+      grid-template-columns: 10rem minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-6);
+    }
+    .why__row--head {
+      display: grid;
+      padding-block: var(--space-2);
+      border-top: 0;
+      font-family: var(--font-mono);
+      font-size: var(--size-label);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+  }
+  @media (min-width: 1024px) {
+    .head__inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-16);
+      align-items: start;
+      padding-block: var(--space-8) var(--space-12);
+    }
+    .demo {
+      margin-top: var(--space-6);
+    }
+    .features {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .why {
+      grid-template-columns: minmax(0, 1fr) 240px;
+      gap: var(--space-12);
+      align-items: start;
+    }
+    .why__shot {
+      display: block;
+      margin-top: var(--space-12);
+    }
+    .decks {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: var(--space-12);
+    }
+    .fix {
+      margin-top: var(--space-12);
+    }
+  }
+  /* one page-load sequence in the head; everything else stays still */
+  @media (prefers-reduced-motion: no-preference) {
+    .head__text > * {
+      animation: rise 600ms cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    }
+    .head__text > :nth-child(2) { animation-delay: 60ms; }
+    .head__text > :nth-child(3) { animation-delay: 120ms; }
+    .head__text > :nth-child(4) { animation-delay: 180ms; }
+    .head__text > :nth-child(5) { animation-delay: 240ms; }
+    .head__text > :nth-child(6) { animation-delay: 300ms; }
+    .demo {
+      animation: rise 800ms 220ms cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+</style>
+
+<script>
+  // "Show answer" on the phone: reveals the answer screenshot from the bottom up, and back again.
+  for (const demo of document.querySelectorAll<HTMLElement>('[data-demo]')) {
+    const btn = demo.querySelector<HTMLButtonElement>('[data-demo-toggle]');
+    btn?.addEventListener('click', () => {
+      const showing = demo.dataset.side === 'a';
+      demo.dataset.side = showing ? 'q' : 'a';
+      btn.setAttribute('aria-pressed', String(!showing));
+      btn.textContent = (showing ? btn.dataset.show : btn.dataset.again) ?? '';
+    });
+  }
+</script>

@@ -1,0 +1,194 @@
+---
+/**
+ * Footer: the geist.pro colophon (accent rule, brand bar, mono type, 44px targets). The legal pages are those of
+ * geist.pro, linked with absolute URLs; the privacy notes of each app are on the app's own page.
+ */
+import { site } from '../data/site';
+import BrandMark from './BrandMark.astro';
+import ThemeSwitch from './ThemeSwitch.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__rule" aria-hidden="true"></div>
+  <div class="footer__bar">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__id">
+          <span class="footer__mark"><BrandMark size={48} /></span>
+          <div class="footer__who">
+            <p class="footer__name">GEIST</p>
+            <p class="footer__institute">{site.institute}</p>
+            <address class="footer__address">
+              {site.address.map((line) => <span class="footer__line">{line}</span>)}
+              <a class="footer__mail" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+            </address>
+          </div>
+        </div>
+        <div class="footer__col">
+          <p class="footer__colophon">
+            These apps come out of the group's teaching and research. Set in Noto Serif, Nunito and Courier Prime, in the
+            GEIST shape language after the 2017 design guideline by Kirill Ragozin.
+          </p>
+          <nav aria-label="Footer">
+            <ul class="footer__links">
+              <li><a href={site.home}>geist.pro</a></li>
+              <li><a href={site.github} rel="noopener">GitHub</a></li>
+              <li><a href="/bergmoench/privacy/">App privacy</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="footer__legal">
+        <p class="footer__copy">© {year} {site.parentOrg} · Hosted on GitHub Pages · No cookies, no analytics</p>
+        <nav aria-label="Legal">
+          <ul class="footer__links footer__links--legal">
+            {
+              site.legal.map((l) => (
+                <li>
+                  <a href={l.href} lang={l.lang} hreflang={l.lang}>{l.label}</a>
+                </li>
+              ))
+            }
+            <li class="footer__theme">
+              <ThemeSwitch variant="line" />
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--space-16);
+  }
+  .footer__rule {
+    height: var(--accent-bar);
+    background: var(--accent);
+  }
+  .footer__bar {
+    padding-block: var(--space-10) var(--space-6);
+    background: var(--brand-bar);
+    color: var(--on-brand);
+  }
+  .footer :global(:focus-visible) {
+    outline-color: var(--on-brand);
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    gap: var(--space-8) var(--space-12);
+    align-items: start;
+  }
+  .footer__id {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  .footer__mark {
+    display: block;
+    flex: 0 0 48px;
+  }
+  .footer__who {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+  .footer__name {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 200;
+    font-size: 2rem; /* Nunito 200 only at >= 32px */
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+  .footer__institute {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .footer__address {
+    font-style: normal;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  .footer__line {
+    display: block;
+  }
+  .footer__mail,
+  .footer__links a {
+    display: inline-flex;
+    align-items: center;
+    min-width: 44px; /* short labels (RSS, DBLP) stay 44px targets */
+    min-height: 44px;
+    color: var(--on-brand);
+  }
+  .footer__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+  .footer__colophon {
+    margin: 0;
+    max-width: 52ch;
+  }
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .footer__links a {
+    text-decoration: none;
+  }
+  .footer__links a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .footer__links :global(.theme-switch-line) {
+    text-transform: inherit;
+    letter-spacing: inherit;
+    text-decoration: none;
+  }
+  .footer__links :global(.theme-switch-line:hover) {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .footer__legal {
+    margin-top: var(--space-8);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--on-brand);
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    letter-spacing: 0.04em;
+  }
+  .footer__copy {
+    margin: 0;
+    padding-block: var(--space-3) var(--space-1);
+    line-height: 1.5;
+  }
+  /* the theme line closes the legal row, at its right end when there is room */
+  @media (min-width: 640px) {
+    .footer__theme {
+      margin-left: auto;
+    }
+  }
+</style>
