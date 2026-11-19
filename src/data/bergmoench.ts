@@ -91,7 +91,7 @@ export const en: Copy = {
   fixNote: 'Not sure how it should read? Open an issue instead. New cards are welcome too.',
   getTitle: 'Get Bergmönch',
   downloads: [
-    { platform: 'iPhone and iPad', title: 'TestFlight beta', note: 'iOS 17 or later. The public link will appear here once Apple has approved the beta.', href: L.testflight || undefined, cta: L.testflight ? 'Open in TestFlight' : 'Coming soon' },
+    { platform: 'iPhone and iPad', title: 'TestFlight beta', note: L.testflight ? 'iOS 17 or later. Install Apple’s TestFlight app first, then open the link on the device.' : 'iOS 17 or later. The public link will appear here once Apple has approved the beta.', href: L.testflight || undefined, cta: L.testflight ? 'Open in TestFlight' : 'Coming soon' },
     { platform: 'Android', title: 'APK from GitHub', note: 'Android 8 or later, 64-bit ARM. Your phone will ask once whether your browser may install apps.', href: L.apk, cta: 'Latest release' },
     { platform: 'Source', title: 'Build it yourself', note: 'SwiftUI and Jetpack Compose over a shared Rust core. The Mac version builds from the same source.', href: L.source, cta: 'geist-pro/bergmoench' },
   ],
@@ -154,7 +154,7 @@ export const de: Copy = {
   fixNote: 'Unsicher, wie es richtig heißen muss? Dann genügt ein Issue. Neue Karten sind ebenfalls willkommen.',
   getTitle: 'Bergmönch laden',
   downloads: [
-    { platform: 'iPhone und iPad', title: 'TestFlight-Beta', note: 'Ab iOS 17. Der öffentliche Link steht hier, sobald Apple die Beta freigegeben hat.', href: L.testflight || undefined, cta: L.testflight ? 'In TestFlight öffnen' : 'Kommt bald' },
+    { platform: 'iPhone und iPad', title: 'TestFlight-Beta', note: L.testflight ? 'Ab iOS 17. Zuerst Apples TestFlight-App installieren, dann den Link auf dem Gerät öffnen.' : 'Ab iOS 17. Der öffentliche Link steht hier, sobald Apple die Beta freigegeben hat.', href: L.testflight || undefined, cta: L.testflight ? 'In TestFlight öffnen' : 'Kommt bald' },
     { platform: 'Android', title: 'APK von GitHub', note: 'Ab Android 8, 64-Bit-ARM. Das Telefon fragt einmal, ob der Browser Apps installieren darf.', href: L.apk, cta: 'Neuestes Release' },
     { platform: 'Quelltext', title: 'Selbst bauen', note: 'SwiftUI und Jetpack Compose über einem gemeinsamen Rust-Kern. Die Mac-Version entsteht aus demselben Quelltext.', href: L.source, cta: 'geist-pro/bergmoench' },
   ],
