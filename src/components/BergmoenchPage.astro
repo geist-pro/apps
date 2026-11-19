@@ -51,7 +51,7 @@ const alternates = [
           }
           <a class="head__source" href={L.source} rel="noopener">{t.cta.source}</a>
         </div>
-        <p class="head__name">{t.name}</p>
+        <p class="head__name">{t.name} <a href="#name">{t.nameMore}</a></p>
       </div>
 
       <figure class="demo" data-demo data-side="q">
@@ -99,7 +99,20 @@ const alternates = [
               <div class="why__row" role="row">
                 <span class="why__what" role="rowheader">{r.what}</span>
                 <span role="cell">{r.does}</span>
-                <span class="why__why" role="cell">{r.why}</span>
+                <span class="why__why" role="cell">
+                  {r.why}
+                  {r.refs && (
+                    <span class="why__refs">
+                      <span class="why__refs-label">{t.refsLabel}:</span>
+                      {r.refs.map((ref, i) => (
+                        <>
+                          {i > 0 && '; '}
+                          <a href={ref.href} rel="noopener">{ref.label}</a>
+                        </>
+                      ))}
+                    </span>
+                  )}
+                </span>
               </div>
             ))
           }
@@ -169,7 +182,17 @@ const alternates = [
     </div>
   </section>
 
-  <section class="section" aria-labelledby="open">
+  <section class="section" aria-labelledby="name">
+    <div class="container">
+      <SectionHead title={t.nameTitle} id="name" />
+      <div class="open">
+        {t.nameText.map((p) => <p>{p}</p>)}
+        <p><a href={t.nameLink.href} rel="noopener">{t.nameLink.label}</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="open">
     <div class="container">
       <SectionHead title={t.openTitle} id="open" />
       <div class="open">
@@ -369,6 +392,14 @@ const alternates = [
   }
   .why__why {
     color: var(--muted);
+  }
+  .why__refs {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--size-meta);
+  }
+  .why__refs-label {
+    margin-right: 0.35em;
   }
   .why__more {
     margin: var(--space-4) 0 0;

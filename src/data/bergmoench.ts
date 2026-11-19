@@ -3,7 +3,21 @@
 import { bergmoenchLinks as L } from './apps';
 
 type Feature = { title: string; text: string };
-type Row = { what: string; does: string; why: string };
+type Ref = { label: string; href: string };
+type Row = { what: string; does: string; why: string; refs?: Ref[] };
+
+// Sources for the Why table. Peer-reviewed, well-cited papers only; each was checked against its abstract.
+const doi = (id: string) => `https://doi.org/${id}`;
+const P = {
+  roediger2006: { label: 'Roediger & Karpicke 2006, Psychological Science', href: doi('10.1111/j.1467-9280.2006.01693.x') },
+  karpicke2008: { label: 'Karpicke & Roediger 2008, Science', href: doi('10.1126/science.1152408') },
+  cepeda2006: { label: 'Cepeda et al. 2006, Psychological Bulletin', href: doi('10.1037/0033-2909.132.3.354') },
+  dunlosky2013: { label: 'Dunlosky et al. 2013, Psychological Science in the Public Interest', href: doi('10.1177/1529100612453266') },
+  cepeda2008: { label: 'Cepeda et al. 2008, Psychological Science', href: doi('10.1111/j.1467-9280.2008.02209.x') },
+  dunlosky2012: { label: 'Dunlosky & Rawson 2012, Learning and Instruction', href: doi('10.1016/j.learninstruc.2011.08.003') },
+  hanus2015: { label: 'Hanus & Fox 2015, Computers & Education', href: doi('10.1016/j.compedu.2014.08.019') },
+} satisfies Record<string, Ref>;
+const benchmark = (label: string): Ref => ({ label, href: 'https://github.com/open-spaced-repetition/srs-benchmark' });
 type Download = { platform: string; title: string; note: string; href?: string; cta: string };
 
 export type Copy = {
@@ -18,6 +32,11 @@ export type Copy = {
   claim: string;
   lede: string;
   name: string;
+  nameMore: string;
+  nameTitle: string;
+  nameText: string[];
+  nameLink: Ref;
+  refsLabel: string;
   cta: { apk: string; testflight: string; testflightSoon: string; source: string };
   demo: { caption: string; show: string; again: string; questionAlt: string; answerAlt: string };
   featuresTitle: string;
@@ -52,6 +71,15 @@ export const en: Copy = {
   claim: 'Flashcards for people with lectures to get through.',
   lede: 'Bergmönch opens Anki decks and plans your reviews. You study a few minutes a day, and the cards you find hard come back sooner than the ones you know. It is free, open source, and works without an account.',
   name: 'The name comes from a Harz mining legend: a ghostly monk who walks the tunnels with a lamp.',
+  nameMore: 'More about the name',
+  nameTitle: 'The name',
+  nameText: [
+    'The Bergmönch, the “mountain monk”, is a spirit from the mining legends of the Harz, the mountains around Clausthal. The Brothers Grimm wrote him down in their German Legends as “Der Bergmönch im Harz”. He is a giant in a monk’s black cowl who walks the tunnels with a pit lamp. He is not safe company: he punishes miners who curse, whistle or slack, and he helps the ones who work honestly.',
+    'We took the name for the lamp. In the legend, a miner whose light is about to go out is given oil from the monk’s lamp. That oil does not run low, for years, as long as the miner tells nobody where it came from. A flashcard app has a similar job: to keep what you learned from going out.',
+    'It also fits the place. TU Clausthal began as a mining school, and the old mines the legend talks about lie all around the town.',
+  ],
+  nameLink: { label: 'Bergmönch on Wikipedia', href: 'https://en.wikipedia.org/wiki/Bergm%C3%B6nch' },
+  refsLabel: 'Sources',
   cta: { apk: 'Get the Android APK', testflight: 'Join the TestFlight beta', testflightSoon: 'TestFlight: coming soon', source: 'Source on GitHub' },
   demo: {
     caption: 'A card from the Programmieren deck, as the app shows it.',
@@ -70,14 +98,16 @@ export const en: Copy = {
     { title: 'Sync with your own server', text: 'Bergmönch syncs with a self-hosted Anki sync server. AnkiWeb does not allow third-party apps, so Bergmönch does not connect to it.' },
   ],
   whyTitle: 'Why it works this way',
-  whyIntro: 'The defaults follow what is known about remembering things. Where the evidence is thin, the app leaves you alone.',
+  whyIntro: 'The defaults follow what is known about remembering things, and each row links the study behind it. Where the evidence is thin, the app leaves you alone.',
   whyHead: ['Setting', 'What Bergmönch does', 'Why'],
   why: [
-    { what: 'Scheduler', does: 'FSRS, the scheduler Anki ships today.', why: 'In the open spaced-repetition benchmark it predicts forgetting better than the older SM-2 algorithm.' },
+    { what: 'Recall', does: 'Every card asks you to recall the answer before you see it.', why: 'Retrieving a fact from memory strengthens it more than reading it again. The benefit shows after days, not minutes.', refs: [P.roediger2006, P.karpicke2008] },
+    { what: 'Spacing', does: 'Reviews are spread over days, then weeks, then months.', why: 'A meta-analysis of 317 experiments found that spaced reviews are remembered better than the same reviews in one sitting. A review of ten study techniques rated spacing and self-testing as the two most useful.', refs: [P.cepeda2006, P.dunlosky2013] },
+    { what: 'Scheduler', does: 'FSRS, the scheduler Anki ships today.', why: 'In the open spaced-repetition benchmark it predicts forgetting better than the older SM-2 algorithm.', refs: [benchmark('Open benchmark on GitHub (not a paper)')] },
     { what: 'Retention target', does: '90 %, adjustable from 70 to 97 %. The daily workload is shown before you change it.', why: 'No percentage is the best one for everyone. Above 90 % the number of reviews climbs steeply.' },
-    { what: 'Exam date', does: 'Intervals are capped by the time left until the exam.', why: 'Cepeda et al. (2008): the best gap between reviews depends on how far away the test is.' },
-    { what: 'Grading', does: 'You see the full answer, then grade yourself. Nothing is graded for you.', why: 'People judge their own recall more accurately with the answer in front of them.' },
-    { what: 'Left out', does: 'Streak counters, leaderboards, points, multiple choice.', why: 'They reward opening the app. They do not show that you remember more.' },
+    { what: 'Exam date', does: 'Intervals are capped by the time left until the exam.', why: 'In a study with more than 1,350 learners, the best gap between reviews grew with the time until the test.', refs: [P.cepeda2008] },
+    { what: 'Grading', does: 'You see the full answer, then grade yourself. Nothing is graded for you.', why: 'With the answer in front of you there is something to check against. Students who rate their own answers too generously remember less later.', refs: [P.dunlosky2012] },
+    { what: 'Left out', does: 'Streak counters, leaderboards, points, multiple choice.', why: 'They reward opening the app. In a semester-long classroom study, badges and a leaderboard lowered motivation and final exam scores. Multiple choice tests recognition, and the cards train recall.', refs: [P.hanus2015] },
   ],
   whyMore: 'All defaults and their sources',
   decksTitle: 'Course decks from TU Clausthal',
@@ -115,6 +145,15 @@ export const de: Copy = {
   claim: 'Karteikarten für alle, die Vorlesungen zu bewältigen haben.',
   lede: 'Bergmönch öffnet Anki-Stapel und plant die Wiederholungen. Gelernt wird ein paar Minuten am Tag, und schwierige Karten kommen früher wieder als die, die schon sitzen. Die App ist kostenlos, quelloffen und braucht kein Konto.',
   name: 'Der Name stammt aus einer Bergbausage im Harz: ein geisterhafter Mönch, der mit einem Grubenlicht durch die Stollen geht.',
+  nameMore: 'Mehr zum Namen',
+  nameTitle: 'Der Name',
+  nameText: [
+    'Der Bergmönch ist ein Berggeist aus den Bergbausagen des Harzes, also aus der Gegend um Clausthal. Die Brüder Grimm haben ihn in ihren Deutschen Sagen als „Der Bergmönch im Harz“ festgehalten. Er ist ein Riese in schwarzer Mönchskutte, der mit einem Grubenlicht durch die Stollen geht. Ungefährlich ist er nicht: Wer flucht, pfeift oder faulenzt, wird bestraft, und wer ehrlich arbeitet, dem hilft er.',
+    'Den Namen haben wir wegen des Lichts gewählt. In der Sage bekommt ein Bergmann, dessen Lampe zu erlöschen droht, Öl aus dem Geleucht des Mönchs. Dieses Öl geht über Jahre nicht zur Neige, solange der Bergmann niemandem verrät, woher es stammt. Eine Karteikarten-App hat eine ähnliche Aufgabe: Das Gelernte soll nicht erlöschen.',
+    'Der Name passt auch zum Ort. Die TU Clausthal ist aus einer Bergschule hervorgegangen, und die alten Gruben, von denen die Sage erzählt, liegen rund um die Stadt.',
+  ],
+  nameLink: { label: 'Berggeister und der Bergmönch in der Wikipedia', href: 'https://de.wikipedia.org/wiki/Berggeist' },
+  refsLabel: 'Quellen',
   cta: { apk: 'Android-APK laden', testflight: 'An der TestFlight-Beta teilnehmen', testflightSoon: 'TestFlight: kommt bald', source: 'Quelltext auf GitHub' },
   demo: {
     caption: 'Eine Karte aus dem Programmieren-Stapel, so wie die App sie zeigt.',
@@ -133,14 +172,16 @@ export const de: Copy = {
     { title: 'Abgleich mit dem eigenen Server', text: 'Bergmönch gleicht mit einem selbst betriebenen Anki-Sync-Server ab. AnkiWeb lässt keine Apps von Dritten zu, deshalb verbindet sich Bergmönch nicht damit.' },
   ],
   whyTitle: 'Warum die App so arbeitet',
-  whyIntro: 'Die Voreinstellungen richten sich nach dem, was über das Behalten bekannt ist. Wo die Belege dünn sind, macht die App keine Vorgaben.',
+  whyIntro: 'Die Voreinstellungen richten sich nach dem, was über das Behalten bekannt ist. Jede Zeile nennt die Studie dahinter. Wo die Belege dünn sind, macht die App keine Vorgaben.',
   whyHead: ['Einstellung', 'Was Bergmönch tut', 'Warum'],
   why: [
-    { what: 'Planung', does: 'FSRS, das Verfahren, das Anki heute mitliefert.', why: 'Im offenen Vergleichstest sagt es das Vergessen genauer vorher als das ältere SM-2.' },
+    { what: 'Abrufen', does: 'Jede Karte verlangt, die Antwort aus dem Gedächtnis abzurufen, bevor sie erscheint.', why: 'Abrufen festigt Wissen stärker als erneutes Lesen. Der Vorteil zeigt sich nach Tagen, nicht nach Minuten.', refs: [P.roediger2006, P.karpicke2008] },
+    { what: 'Verteilen', does: 'Die Wiederholungen verteilen sich über Tage, dann Wochen, dann Monate.', why: 'Eine Metaanalyse von 317 Experimenten zeigt: Verteilte Wiederholungen bleiben besser im Gedächtnis als dieselben Wiederholungen an einem Stück. Eine Übersicht über zehn Lerntechniken stuft verteiltes Lernen und Selbsttests als die beiden nützlichsten ein.', refs: [P.cepeda2006, P.dunlosky2013] },
+    { what: 'Planung', does: 'FSRS, das Verfahren, das Anki heute mitliefert.', why: 'Im offenen Vergleichstest sagt es das Vergessen genauer vorher als das ältere SM-2.', refs: [benchmark('Offener Vergleichstest auf GitHub (kein Fachartikel)')] },
     { what: 'Behaltensziel', does: '90 %, einstellbar von 70 bis 97 %. Vor jeder Änderung zeigt die App den täglichen Aufwand an.', why: 'Kein Prozentwert ist für alle der beste. Über 90 % steigt die Zahl der Wiederholungen stark an.' },
-    { what: 'Prüfungstermin', does: 'Die Abstände werden durch die Zeit bis zur Prüfung begrenzt.', why: 'Cepeda et al. (2008): Der beste Abstand zwischen zwei Wiederholungen hängt davon ab, wie weit die Prüfung entfernt ist.' },
-    { what: 'Bewertung', does: 'Erst erscheint die ganze Antwort, dann bewertet man sich selbst. Die App bewertet nichts automatisch.', why: 'Mit der Antwort vor Augen schätzt man die eigene Erinnerung genauer ein.' },
-    { what: 'Weggelassen', does: 'Serienzähler, Ranglisten, Punkte, Multiple Choice.', why: 'Sie belohnen das Öffnen der App. Dass man mehr behält, zeigen sie nicht.' },
+    { what: 'Prüfungstermin', does: 'Die Abstände werden durch die Zeit bis zur Prüfung begrenzt.', why: 'In einer Studie mit mehr als 1350 Lernenden wuchs der beste Abstand zwischen zwei Wiederholungen mit der Zeit bis zum Test.', refs: [P.cepeda2008] },
+    { what: 'Bewertung', does: 'Erst erscheint die ganze Antwort, dann bewertet man sich selbst. Die App bewertet nichts automatisch.', why: 'Mit der Antwort vor Augen gibt es einen Maßstab. Studierende, die ihre eigenen Antworten zu großzügig bewerten, behalten später weniger.', refs: [P.dunlosky2012] },
+    { what: 'Weggelassen', does: 'Serienzähler, Ranglisten, Punkte, Multiple Choice.', why: 'Sie belohnen das Öffnen der App. In einer Studie über ein Semester senkten Abzeichen und eine Rangliste die Motivation und die Noten der Abschlussklausur. Multiple Choice prüft das Wiedererkennen, die Karten üben das Abrufen.', refs: [P.hanus2015] },
   ],
   whyMore: 'Alle Voreinstellungen und ihre Quellen (englisch)',
   decksTitle: 'Vorlesungsstapel der TU Clausthal',
