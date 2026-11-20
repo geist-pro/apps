@@ -53,7 +53,7 @@ export const bergmoenchLinks = {
 
 // Klopfgeist download links. One TestFlight link serves iPhone, iPad and Mac; set it once Apple has approved the beta.
 export const klopfgeistLinks = {
-  testflight: '' as string,
+  testflight: 'https://testflight.apple.com/join/HuqnZqZw' as string,
   apk: 'https://github.com/geist-pro/klopfgeist/releases/latest',
   source: 'https://github.com/geist-pro/klopfgeist',
   voiceTests: 'https://github.com/geist-pro/klopfgeist/tree/main/docs/voice-suite',
