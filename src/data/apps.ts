@@ -42,7 +42,7 @@ export const apps: App[] = [
 
 // Bergmönch download links. Set `testflight` to the public link once Apple has approved the beta.
 export const bergmoenchLinks = {
-  testflight: '' as string,
+  testflight: 'https://testflight.apple.com/join/9QZujZ7f' as string,
   apk: 'https://github.com/geist-pro/bergmoench/releases/latest',
   source: 'https://github.com/geist-pro/bergmoench',
   defaults: 'https://github.com/geist-pro/bergmoench/blob/main/docs/science-defaults.md',
