@@ -1,0 +1,657 @@
+---
+/**
+ * The Klopfgeist page in one language (copy: src/data/klopfgeist.ts). Head with the app icon, claim and downloads,
+ * and a phone that walks through one comment: "stop", the spoken comment, "continue". Then features, the full
+ * list of voice commands, downloads, what the beta was tested on, the name and the licence.
+ */
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SectionHead from './SectionHead.astro';
+import type { Copy } from '../data/klopfgeist';
+import { klopfgeistLinks as L } from '../data/apps';
+import icon from '../assets/klopfgeist-icon.png';
+import play from '../assets/klopfgeist-play.png';
+import record from '../assets/klopfgeist-record.png';
+import comments from '../assets/klopfgeist-comments.png';
+
+export interface Props {
+  t: Copy;
+}
+const { t } = Astro.props;
+const shots = [play, record, comments];
+const alternates = [
+  { lang: 'en' as const, href: '/klopfgeist/' },
+  { lang: 'de' as const, href: '/klopfgeist/de/' },
+  { lang: 'x-default' as const, href: '/klopfgeist/' },
+];
+const other = t.lang === 'en' ? 'de' : 'en';
+---
+
+<Base title={t.title} fullTitle={`${t.title} · ${t.claim.replace(/\.$/, '')}`} description={t.description} lang={t.lang} alternates={alternates}>
+  <div class="wedge" aria-hidden="true"></div>
+  <section class="head">
+    <div class="container head__inner">
+      <div class="head__text">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">{t.crumbs[0]}</a><span aria-hidden="true">/</span><span aria-current="page">{t.crumbs[1]}</span>
+          <a class="crumbs__lang" href={t.otherPath} hreflang={other} lang={other}>{t.otherLabel}</a>
+        </nav>
+        <div class="head__id">
+          <Image class="head__icon" src={icon} alt="" width={88} height={88} widths={[88, 176]} sizes="88px" loading="eager" />
+          <h1 class="head__title">{t.title}</h1>
+        </div>
+        <p class="head__claim">{t.claim}</p>
+        <p class="lede">{t.lede}</p>
+        <div class="head__cta">
+          <a class="button" href={L.apk} rel="noopener">{t.cta.apk}</a>
+          {
+            L.testflight ? (
+              <a class="button button--ghost" href={L.testflight} rel="noopener">{t.cta.testflight}</a>
+            ) : (
+              <span class="head__soon">{t.cta.testflightSoon}</span>
+            )
+          }
+          <a class="head__source" href={L.source} rel="noopener">{t.cta.source}</a>
+        </div>
+        <p class="head__name">{t.name} <a href="#name">{t.nameMore}</a></p>
+      </div>
+
+      <figure class="demo" data-demo data-step="0" aria-label={t.demoLabel}>
+        <div class="phone">
+          <div class="phone__screen">
+            {
+              shots.map((shot, i) => (
+                <Image class="phone__img" data-shot={i} src={shot} alt={t.steps[i].alt} width={393} height={852} widths={[393, 786]} sizes="(min-width: 480px) 320px, 70vw" loading={i === 0 ? 'eager' : 'lazy'} />
+              ))
+            }
+          </div>
+        </div>
+        <ol class="steps">
+          {
+            t.steps.map((s, i) => (
+              <li class="step" data-step-item={i}>
+                <button class="step__btn" type="button" data-step-btn={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+                  <span class="step__say">{s.say}</span>
+                  <span class="step__title">{s.title}</span>
+                </button>
+                <p class="step__text">{s.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="features">
+    <div class="container">
+      <SectionHead title={t.featuresTitle} id="features" />
+      <div class="features">
+        {
+          t.features.map((f) => (
+            <div class="feature">
+              <h3>{f.title}</h3>
+              <p>{f.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="commands">
+    <div class="container">
+      <SectionHead title={t.commandsTitle} id="commands" />
+      <p class="intro">{t.commandsIntro}</p>
+      <div class="cmd" role="table" aria-labelledby="commands">
+        <div class="cmd__row cmd__row--head" role="row">
+          {t.commandsHead.map((h) => <span role="columnheader">{h}</span>)}
+        </div>
+        {
+          t.commands.map((c) => (
+            <div class="cmd__row" role="row">
+              <span class="cmd__does" role="rowheader">{c.does}</span>
+              <span class="cmd__say" role="cell" lang="en" data-label={t.commandsHead[1]}>
+                {c.en.map((w) => <span class="say">{w}</span>)}
+              </span>
+              <span class="cmd__say" role="cell" lang="de" data-label={t.commandsHead[2]}>
+                {c.de.map((w) => <span class="say">{w}</span>)}
+              </span>
+              <span class="cmd__when" role="cell">{c.when}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="more">
+        <div>
+          <h3>{t.tagsTitle}</h3>
+          <p>{t.tagsIntro}</p>
+          <div class="cmd cmd--tags" role="table">
+            <div class="cmd__row cmd__row--head" role="row">
+              {t.tagsHead.map((h) => <span role="columnheader">{h}</span>)}
+            </div>
+            {
+              t.tags.map((g) => (
+                <div class="cmd__row" role="row">
+                  <span class="cmd__does" role="rowheader">{g.tag}</span>
+                  <span class="cmd__say" role="cell" lang="en" data-label={t.tagsHead[1]}>
+                    {g.en.map((w) => <span class="say">{w}</span>)}
+                  </span>
+                  <span class="cmd__say" role="cell" lang="de" data-label={t.tagsHead[2]}>
+                    {g.de.map((w) => <span class="say">{w}</span>)}
+                  </span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+        <div class="aside">
+          <h3>{t.buttonsTitle}</h3>
+          <p>{t.buttonsIntro}</p>
+          <dl class="buttons">
+            {
+              t.buttons.map((b) => (
+                <>
+                  <dt>{b.button}</dt>
+                  <dd>{b.does}</dd>
+                </>
+              ))
+            }
+          </dl>
+          <h3 class="aside__next">{t.tipsTitle}</h3>
+          <ul class="tips">
+            {t.tips.map((tip) => <li>{tip}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="get">
+    <div class="container">
+      <SectionHead title={t.getTitle} id="get" />
+      <div class="get">
+        {
+          t.downloads.map((d) => (
+            <div class="get__item">
+              <p class="eyebrow">{d.platform}</p>
+              <h3 class="get__title">{d.title}</h3>
+              <p class="get__note">{d.note}</p>
+              {d.href ? (
+                <a class="button button--ghost" href={d.href} rel="noopener">{d.cta}</a>
+              ) : (
+                <span class="status status--outline">{d.cta}</span>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="beta">
+    <div class="container">
+      <SectionHead title={t.betaTitle} id="beta" />
+      <div class="open">
+        {t.beta.map((p) => <p>{p}</p>)}
+        <p><a href={t.betaLink.href} rel="noopener">{t.betaLink.label}</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="name">
+    <div class="container">
+      <SectionHead title={t.nameTitle} id="name" />
+      <div class="open">
+        {t.nameText.map((p) => <p>{p}</p>)}
+        <p><a href={t.nameLink.href} rel="noopener">{t.nameLink.label}</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="open">
+    <div class="container">
+      <SectionHead title={t.openTitle} id="open" />
+      <div class="open">
+        {t.open.map((p) => <p>{p}</p>)}
+        <p><a href="/klopfgeist/privacy/">{t.privacy}</a></p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .wedge {
+    height: 72px;
+    background: var(--brand-bar);
+    clip-path: polygon(0 0, 100% 0, 100% 12px, 0 100%);
+  }
+  .head__inner {
+    display: grid;
+    gap: var(--space-10);
+    padding-block: var(--space-6) var(--space-8);
+  }
+  .head__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .crumbs a:hover {
+    text-decoration: underline;
+  }
+  .crumbs__lang {
+    margin-left: auto;
+    padding-inline: var(--space-3);
+    border: 1px solid var(--line);
+    color: var(--brand) !important;
+  }
+  .head__id {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .head__icon {
+    flex: 0 0 auto;
+    width: 88px;
+    height: 88px;
+  }
+  .head__title {
+    margin: 0;
+    font-size: clamp(2.75rem, 1.9rem + 4.2vw, 5rem);
+  }
+  .head__claim {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.3rem);
+    line-height: 1.4;
+    color: var(--muted);
+    max-width: 32ch;
+  }
+  .head__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin-top: var(--space-2);
+  }
+  .head__soon {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border: 1px dashed var(--line);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--size-nav);
+    color: var(--muted);
+  }
+  .head__source {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .head__name {
+    margin: var(--space-2) 0 0;
+    font-size: var(--size-meta);
+    color: var(--muted);
+    max-width: 52ch;
+  }
+
+  /* the phone: a flat frame, no shadow, square as the rest of the site */
+  .phone {
+    width: min(320px, 70vw);
+    padding: 8px;
+    background: #161616;
+    outline: 1px solid var(--line);
+  }
+  .phone--sm {
+    width: 240px;
+  }
+  .phone__screen {
+    position: relative;
+    aspect-ratio: 393 / 852;
+    overflow: hidden;
+    background: #0b1220;
+  }
+  .phone__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .demo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin: 0;
+  }
+
+  /* the three screens of one comment, stacked; the current step's screen is on top */
+  .phone__img {
+    opacity: 0;
+    transition: opacity 320ms ease;
+  }
+  .demo[data-step='0'] .phone__img[data-shot='0'],
+  .demo[data-step='1'] .phone__img[data-shot='1'],
+  .demo[data-step='2'] .phone__img[data-shot='2'] {
+    opacity: 1;
+  }
+  .steps {
+    display: grid;
+    gap: 0;
+    width: min(320px, 70vw);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+  .step {
+    border-top: 1px solid var(--line);
+  }
+  .step__btn {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    column-gap: var(--space-2);
+    align-items: baseline;
+    width: 100%;
+    min-height: 44px;
+    padding: var(--space-2) 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .step__btn::before {
+    counter-increment: step;
+    content: counter(step);
+    grid-row: span 2;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+  }
+  .step__say {
+    font-family: var(--font-mono);
+    font-size: var(--size-nav);
+    color: var(--ink);
+  }
+  .step__title {
+    font-size: var(--size-meta);
+  }
+  .step__btn[aria-pressed='true'] .step__say {
+    color: var(--brand);
+  }
+  .step__btn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+  .step__text {
+    display: none;
+    margin: 0 0 var(--space-3) calc(1.5rem + var(--space-2));
+    font-size: var(--size-meta);
+    color: var(--muted);
+  }
+  .demo[data-step='0'] [data-step-item='0'] .step__text,
+  .demo[data-step='1'] [data-step-item='1'] .step__text,
+  .demo[data-step='2'] [data-step-item='2'] .step__text {
+    display: block;
+  }
+  :global(html:not(.js)) .step__text {
+    display: block;
+  }
+
+  .intro {
+    margin: 0 0 var(--space-6);
+    max-width: var(--measure);
+  }
+  .cmd__row {
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  .cmd__row--head {
+    display: none;
+  }
+  .cmd__does {
+    color: var(--ink);
+  }
+  .cmd__say {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: baseline;
+  }
+  .cmd__say::before {
+    content: attr(data-label);
+    flex-basis: 100%;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .say {
+    padding: 2px 8px;
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    color: var(--ink);
+    background: var(--bg);
+    white-space: nowrap;
+  }
+  .cmd__when {
+    font-size: var(--size-meta);
+    color: var(--muted);
+  }
+  .more {
+    display: grid;
+    gap: var(--space-10);
+    margin-top: var(--space-12);
+  }
+  .more h3 {
+    color: var(--ink);
+  }
+  .more p {
+    margin: 0 0 var(--space-4);
+    max-width: var(--measure);
+  }
+  .aside {
+    padding: var(--space-5);
+    border: 1px solid var(--ink);
+    align-self: start;
+  }
+  .aside__next {
+    margin-top: var(--space-6);
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+  }
+  .buttons dt {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    color: var(--ink);
+  }
+  .buttons dd {
+    margin: 0;
+    color: var(--muted);
+  }
+  .tips {
+    margin: 0;
+    padding-left: 1.2em;
+    color: var(--muted);
+  }
+  .tips li {
+    margin-bottom: var(--space-2);
+  }
+
+  .features {
+    display: grid;
+    gap: var(--space-8) var(--space-10);
+  }
+  .feature h3,
+  .more h3 {
+    margin-bottom: var(--space-2);
+    color: var(--ink);
+  }
+  .feature p {
+    margin: 0;
+    max-width: 42ch;
+  }
+
+  .get {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .get__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .get__title {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 200;
+    font-size: 2rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+  .get__note {
+    margin: 0 0 var(--space-2);
+    max-width: 38ch;
+  }
+  .open {
+    max-width: var(--measure);
+  }
+  .open p {
+    margin: 0 0 var(--space-4);
+  }
+
+  @media (max-width: 639px) {
+    .wedge {
+      height: 40px;
+      clip-path: polygon(0 0, 100% 0, 100% 8px, 0 100%);
+    }
+  }
+  @media (min-width: 640px) {
+    .features {
+      grid-template-columns: 1fr 1fr;
+    }
+    .get {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 768px) {
+    .cmd__row {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr);
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .cmd--tags .cmd__row {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .cmd__row--head {
+      display: grid;
+      padding-block: var(--space-2);
+      border-top: 0;
+      font-family: var(--font-mono);
+      font-size: var(--size-label);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .cmd__say::before {
+      content: none;
+    }
+  }
+  @media (min-width: 1024px) {
+    .head__inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-16);
+      align-items: start;
+      padding-block: var(--space-8) var(--space-12);
+    }
+    .demo {
+      margin-top: var(--space-6);
+    }
+    .features {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .more {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: var(--space-12);
+    }
+  }
+  /* one page-load sequence in the head; everything else stays still */
+  @media (prefers-reduced-motion: no-preference) {
+    .head__text > * {
+      animation: rise 600ms cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    }
+    .head__text > :nth-child(2) { animation-delay: 60ms; }
+    .head__text > :nth-child(3) { animation-delay: 120ms; }
+    .head__text > :nth-child(4) { animation-delay: 180ms; }
+    .head__text > :nth-child(5) { animation-delay: 240ms; }
+    .head__text > :nth-child(6) { animation-delay: 300ms; }
+    .demo {
+      animation: rise 800ms 220ms cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+</style>
+
+<script>
+  // The phone walks through one comment. The steps are buttons; untouched, the demo advances by itself
+  // every four seconds, unless the visitor prefers reduced motion or has taken over.
+  for (const demo of document.querySelectorAll<HTMLElement>('[data-demo]')) {
+    const buttons = [...demo.querySelectorAll<HTMLButtonElement>('[data-step-btn]')];
+    const show = (i: number) => {
+      demo.dataset.step = String(i);
+      buttons.forEach((b, n) => b.setAttribute('aria-pressed', String(n === i)));
+    };
+    let timer = 0;
+    const stop = () => window.clearInterval(timer);
+    buttons.forEach((b, i) =>
+      b.addEventListener('click', () => {
+        stop();
+        show(i);
+      }),
+    );
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      timer = window.setInterval(() => show((Number(demo.dataset.step) + 1) % buttons.length), 4000);
+      demo.addEventListener('pointerenter', stop, { once: true });
+      demo.addEventListener('focusin', stop, { once: true });
+    }
+  }
+</script>

@@ -33,10 +33,11 @@ export const apps: App[] = [
     slug: 'klopfgeist',
     name: 'Klopfgeist',
     tagline: 'Listen to a paper, review it by voice',
-    summary: 'Plays a paper as an audiobook. Say “stop”, speak your comment, say “continue”. The comments become a review draft.',
-    status: 'soon',
+    summary: 'Reads a paper to you like an audiobook. Say “stop”, speak your comment, say “continue”. The comments become a review draft. Free and open source.',
+    status: 'beta',
     platforms: ['iPhone', 'iPad', 'Mac', 'Android'],
     icon: klopfgeist,
+    href: '/klopfgeist/',
   },
 ];
 
@@ -48,4 +49,12 @@ export const bergmoenchLinks = {
   defaults: 'https://github.com/geist-pro/bergmoench/blob/main/docs/science-defaults.md',
   deckProgrammieren: 'https://github.com/geist-pro/deck-programmieren',
   deckCoopSys: 'https://github.com/geist-pro/deck-cooperation-systems',
+} as const;
+
+// Klopfgeist download links. One TestFlight link serves iPhone, iPad and Mac; set it once Apple has approved the beta.
+export const klopfgeistLinks = {
+  testflight: '' as string,
+  apk: 'https://github.com/geist-pro/klopfgeist/releases/latest',
+  source: 'https://github.com/geist-pro/klopfgeist',
+  voiceTests: 'https://github.com/geist-pro/klopfgeist/tree/main/docs/voice-suite',
 } as const;

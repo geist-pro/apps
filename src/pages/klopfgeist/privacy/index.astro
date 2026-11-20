@@ -1,0 +1,133 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import { site } from '../../../data/site';
+const crumbs = [
+  { name: 'Apps', href: '/' },
+  { name: 'Klopfgeist', href: '/klopfgeist/' },
+  { name: 'Privacy', href: '/klopfgeist/privacy/' },
+];
+---
+
+<Base title="Klopfgeist privacy" description="What the Klopfgeist app does with your voice and your documents: both stay on your device." noindex>
+  <PageHead title="Klopfgeist and your data" kicker="Privacy · Datenschutz" breadcrumbs={crumbs} lede="Short version: your documents, your voice and your comments stay on your device. We receive nothing." />
+  <div class="container prose-page">
+    <section>
+      <h2>English</h2>
+      <h3>Who is responsible</h3>
+      <p>
+        Klopfgeist is published by the GEIST group, Human-Centered Information Systems, {site.parentOrg}, {site.address[2]}, {site.address[3]}.
+        Contact: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>. Full details are in the
+        <a href="https://geist.pro/impressum/" hreflang="de">Impressum</a>; the university's data protection officer is named in the
+        <a href="https://geist.pro/datenschutz/" hreflang="de">privacy notice of geist.pro</a>.
+      </p>
+      <h3>The microphone</h3>
+      <p>
+        The app listens only while a book is open, so that it can hear a command such as “stop”. Speech is recognized
+        on the device: on Android by the Vosk models inside the app and the phone's on-device recognizer, on Apple devices
+        by Apple's on-device speech recognition. The audio of a comment is saved as a file next to the book, so you can
+        play it back. Neither the audio nor the transcript is sent to us or to anyone else.
+      </p>
+      <h3>What the app stores</h3>
+      <p>
+        Your books, their text, your comments, recordings and settings are stored in the app's own folder on your device.
+        There is no account. The app contains no advertising, no analytics and no crash reporting of ours.
+      </p>
+      <h3>When the app uses the network</h3>
+      <ul>
+        <li><strong>Sample papers.</strong> If you choose “Try a Sample Paper”, the audiobook is downloaded from GitHub.</li>
+        <li><strong>Voices.</strong> On the Mac, the Kokoro and Qwen3 voices are downloaded from the Hugging Face model hub the first time you choose them. Apple devices may download Apple's speech models from Apple.</li>
+        <li><strong>Sync.</strong> Only if you turn it on and enter your own Nextcloud or WebDAV server. Books, comments and recordings are then copied to that server and nowhere else. The password is kept in the system's keychain.</li>
+      </ul>
+      <p>
+        Converting a document into an audiobook happens on the device. On Android it uses the text-to-speech engine
+        installed on the phone, which follows that engine's own settings.
+      </p>
+      <h3>Getting the app</h3>
+      <p>
+        TestFlight is run by Apple. Apple shares crash logs and feedback with us only if you send them, and handles your
+        data under its own privacy policy. The Android APK and the source code are downloaded from GitHub, which logs
+        access as described in GitHub's privacy statement.
+      </p>
+      <h3>Reports you send us</h3>
+      <p>
+        The session trace you can export under Settings › Diagnostics lists the command words the recognizer heard and
+        what the app decided. It contains no audio. It leaves the device only if you share it.
+      </p>
+      <h3>Your rights</h3>
+      <p>
+        Because we hold no data about you from the app, there is nothing we could give you access to, correct or delete.
+        Removing the app removes its data from your device. For questions, write to the address above.
+      </p>
+    </section>
+    <section lang="de">
+      <h2>Deutsch</h2>
+      <h3>Verantwortlich</h3>
+      <p>
+        Klopfgeist wird von der Arbeitsgruppe GEIST, Human-Centered Information Systems, Technische Universität Clausthal,
+        {site.address[2]}, 38678 Clausthal-Zellerfeld, veröffentlicht. Kontakt: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+        Vollständige Angaben stehen im <a href="https://geist.pro/impressum/">Impressum</a>; die Datenschutzbeauftragte Stelle der
+        Universität nennt die <a href="https://geist.pro/datenschutz/">Datenschutzerklärung von geist.pro</a>.
+      </p>
+      <h3>Das Mikrofon</h3>
+      <p>
+        Die App hört nur zu, solange ein Buch geöffnet ist, damit sie einen Befehl wie „Stopp“ erkennt. Sprache wird auf
+        dem Gerät erkannt: unter Android durch die Vosk-Modelle in der App und die Spracherkennung des Telefons, auf
+        Apple-Geräten durch Apples Spracherkennung auf dem Gerät. Die Tonaufnahme eines Kommentars liegt als Datei beim
+        Buch, damit sie sich wieder anhören lässt. Weder Aufnahme noch Wortlaut gehen an uns oder an Dritte.
+      </p>
+      <h3>Was die App speichert</h3>
+      <p>
+        Bücher, deren Text, Kommentare, Aufnahmen und Einstellungen liegen im eigenen Ordner der App auf dem Gerät. Es gibt
+        kein Konto. Die App enthält keine Werbung, keine Nutzungsauswertung und keine eigene Absturzmeldung.
+      </p>
+      <h3>Wann die App das Netz nutzt</h3>
+      <ul>
+        <li><strong>Beispiel-Paper.</strong> Wird „Try a Sample Paper“ gewählt, lädt die App das Hörbuch von GitHub.</li>
+        <li><strong>Stimmen.</strong> Auf dem Mac werden die Stimmen Kokoro und Qwen3 bei der ersten Auswahl vom Modellverzeichnis Hugging Face geladen. Apple-Geräte laden Apples Sprachmodelle gegebenenfalls von Apple.</li>
+        <li><strong>Abgleich.</strong> Nur wenn er eingeschaltet und ein eigener Nextcloud- oder WebDAV-Server eingetragen ist. Bücher, Kommentare und Aufnahmen werden dann auf diesen Server kopiert und auf keinen anderen. Das Passwort liegt im Schlüsselbund des Systems.</li>
+      </ul>
+      <p>
+        Die Umwandlung eines Dokuments in ein Hörbuch geschieht auf dem Gerät. Unter Android nutzt sie die auf dem Telefon
+        installierte Sprachausgabe, für die deren eigene Einstellungen gelten.
+      </p>
+      <h3>Bezug der App</h3>
+      <p>
+        TestFlight wird von Apple betrieben. Apple gibt Absturzberichte und Rückmeldungen nur an uns weiter, wenn sie
+        abgeschickt werden, und verarbeitet Daten nach der eigenen Datenschutzerklärung. Die Android-APK und der Quelltext
+        werden von GitHub geladen; GitHub protokolliert Zugriffe gemäß seiner Datenschutzerklärung.
+      </p>
+      <h3>Berichte an uns</h3>
+      <p>
+        Das Sitzungsprotokoll, das sich unter Settings › Diagnostics exportieren lässt, enthält die erkannten Befehlswörter
+        und die Entscheidungen der App. Tonaufnahmen enthält es nicht. Es verlässt das Gerät nur, wenn es geteilt wird.
+      </p>
+      <h3>Rechte</h3>
+      <p>
+        Da wir aus der App keine Daten über Nutzerinnen und Nutzer erhalten, gibt es nichts, worüber wir Auskunft geben,
+        das wir berichtigen oder löschen könnten. Mit dem Entfernen der App werden ihre Daten vom Gerät gelöscht. Fragen
+        bitte an die oben genannte Adresse.
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .prose-page {
+    display: grid;
+    gap: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+  .prose-page section {
+    max-width: var(--measure);
+  }
+  .prose-page h3 {
+    margin-top: var(--space-6);
+    color: var(--ink);
+  }
+  @media (min-width: 1024px) {
+    .prose-page {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
